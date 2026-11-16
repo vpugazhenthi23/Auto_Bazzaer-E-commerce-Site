@@ -29,6 +29,9 @@
                 <a href="#vehicles" class="nav-link">
                     <i class="fas fa-motorcycle"></i> Vehicles
                 </a>
+                <a href="#vehicles" class="nav-link" data-filter="favorites">
+                    <i class="fas fa-heart"></i> Favorites
+                </a>
                 <a href="#about" class="nav-link">
                     <i class="fas fa-info-circle"></i> About
                 </a>
@@ -108,7 +111,7 @@
         <div class="container">
             <div class="section-header">
                 <h2 class="section-title">Vehicles near you</h2>
-                <p class="section-subtitle">Car prices and specifications are sample values for display only. Verify the actual details with sellers.</p>
+                <p class="section-subtitle">Save vehicles to your Favorites and view them later. Car prices and specifications are sample values for display only; verify details with sellers.</p>
                 <div class="section-controls">
                     <button class="filter-btn active" data-filter="all">All</button>
                     <button class="filter-btn" data-filter="bike">
@@ -116,6 +119,9 @@
                     </button>
                     <button class="filter-btn" data-filter="car">
                         <i class="fas fa-car"></i> Cars
+                    </button>
+                    <button class="filter-btn favorites-filter" data-filter="favorites">
+                        <i class="fas fa-heart"></i> Favorites <span class="favorites-count" id="favoriteCount">0</span>
                     </button>
                 </div>
             </div>

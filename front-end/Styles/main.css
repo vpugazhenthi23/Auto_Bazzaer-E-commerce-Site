@@ -2000,8 +2000,51 @@ body {
 .toast.success { --tc: #0ca678; }
 .toast.error { --tc: #f0412a; }
 
+.favorite-toggle {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    z-index: 2;
+    display: grid;
+    width: 42px;
+    height: 42px;
+    place-items: center;
+    border: 1px solid rgba(43, 26, 16, 0.1);
+    border-radius: 50%;
+    background: #fff;
+    color: #755f4e;
+    box-shadow: var(--shadow-sm);
+    cursor: pointer;
+    transition: color 0.2s ease, transform 0.2s ease, background 0.2s ease;
+}
+.favorite-toggle:hover { transform: scale(1.08); color: var(--primary); }
+.favorite-toggle.is-favorite { background: #fff1e3; color: var(--primary); }
+.favorite-toggle:focus-visible { outline: 3px solid rgba(255, 106, 0, 0.35); outline-offset: 2px; }
+.favorites-filter { white-space: nowrap; }
+.favorites-count {
+    min-width: 20px;
+    padding: 2px 6px;
+    border-radius: 999px;
+    background: rgba(43, 26, 16, 0.08);
+    font-size: 0.75rem;
+    line-height: 1.2;
+}
+.favorites-filter.active .favorites-count { background: rgba(255, 255, 255, 0.2); }
+.vehicles-grid.favorites-view {
+    height: min(680px, 72vh);
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 12px;
+    border: 1px solid rgba(43, 26, 16, 0.08);
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.55);
+    box-shadow: var(--shadow-sm);
+    scrollbar-gutter: stable;
+    overscroll-behavior: contain;
+}
+
 @media (prefers-reduced-motion: reduce) {
-    .btn-primary, .search-btn, .vehicle-card::after { transition: none; }
+    .btn-primary, .search-btn, .vehicle-card::after, .favorite-toggle { transition: none; }
 }
 
 /* ====== RESPONSIVE ====== */

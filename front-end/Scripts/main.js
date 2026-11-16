@@ -35,6 +35,9 @@ const carPhotoListings = [
 const allVehiclesData = [...carPhotoListings, ...allBikesData];
 const initialVehiclesData = [...carPhotoListings.slice(0, 3), ...allBikesData.slice(0, 3)];
 let vehiclesData = [...initialVehiclesData];
+const FAVORITES_STORAGE_KEY = 'autobazaarFavorites';
+let favoriteVehicleIds = [];
+let favoritesOnly = false;
 const AUTH_API = window.AutoBazaarAuthAPI;
 const AUTH_STORAGE_KEY = AUTH_API.storageKey;
 const requestAuth = AUTH_API.requestAuth;
@@ -72,6 +75,8 @@ let authNoticeTimeout = null;
 
 // ====== INITIALIZATION ======
 document.addEventListener('DOMContentLoaded', function() {
+    loadFavorites();
+
     // Load listings
     applyVehicleFilters();
     
@@ -98,7 +103,9 @@ function renderVehicles(vehicles) {
         `${vehicles.length} ${vehicles.length === 1 ? 'vehicle' : 'vehicles'} found`;
 
     if (!vehicles.length) {
-        carouselContainer.innerHTML = '<p class="empty-state">No vehicles match your search. Try another make, model, or location.</p>';
+        carouselContainer.innerHTML = favoritesOnly
+            ? '<p class="empty-state">No saved vehicles match the current filters. Select the heart on a vehicle to add it to your favorites.</p>'
+            : '<p class="empty-state">No vehicles match your search. Try another make, model, or location.</p>';
         return;
     }
     
@@ -123,6 +130,9 @@ function renderVehicles(vehicles) {
         
         vehicleCard.innerHTML = `
             <div class="vehicle-badge">${vehicle.type === 'car' ? (vehicle.isPhotoPreview ? 'Sample Car' : 'Car') : 'Bike'}</div>
+            <button class="favorite-toggle${favoriteVehicleIds.includes(String(vehicle.id)) ? ' is-favorite' : ''}" type="button" data-id="${vehicle.id}" aria-label="${favoriteVehicleIds.includes(String(vehicle.id)) ? 'Remove' : 'Save'} ${vehicle.name} ${favoriteVehicleIds.includes(String(vehicle.id)) ? 'from' : 'to'} favorites" aria-pressed="${favoriteVehicleIds.includes(String(vehicle.id))}" title="${favoriteVehicleIds.includes(String(vehicle.id)) ? 'Remove from favorites' : 'Save to favorites'}">
+                <i class="fas fa-heart" aria-hidden="true"></i>
+            </button>
             <div class="vehicle-image">
                 <img src="${vehicle.image}" alt="${vehicle.name}">
             </div>
@@ -161,6 +171,12 @@ function renderVehicles(vehicles) {
             } else {
                 buyVehicle(id);
             }
+        });
+    });
+
+    document.querySelectorAll('.favorite-toggle').forEach(btn => {
+        btn.addEventListener('click', function() {
+            toggleFavorite(this.getAttribute('data-id'));
         });
     });
 }
@@ -388,10 +404,12 @@ function applyVehicleFilters() {
     const searchTerm = document.getElementById('vehicleSearch').value.trim().toLowerCase();
     const location = document.getElementById('locationFilter').value.toLowerCase();
     const category = document.getElementById('categoryFilter').value;
-    const hasActiveFilters = Boolean(searchTerm || location || category !== 'all');
+    const hasActiveFilters = Boolean(searchTerm || location || category !== 'all' || favoritesOnly);
+    vehiclesGrid.classList.toggle('favorites-view', favoritesOnly);
     const matches = allVehiclesData.filter(vehicle => {
         const searchableText = `${vehicle.name} ${vehicle.type} ${vehicle.location} ${vehicle.year} ${vehicle.fuel}`.toLowerCase();
-        return (category === 'all' || vehicle.type === category)
+        return (!favoritesOnly || favoriteVehicleIds.includes(String(vehicle.id)))
+            && (category === 'all' || vehicle.type === category)
             && (!searchTerm || searchableText.includes(searchTerm))
             && (!location || vehicle.location.toLowerCase().includes(location));
     });
@@ -407,12 +425,56 @@ function applyVehicleFilters() {
         ? '<i class="fas fa-chevron-up"></i> Show Less'
         : '<i class="fas fa-eye"></i> View All Vehicles';
     filterBtns.forEach(btn => {
-        btn.classList.toggle('active', btn.getAttribute('data-filter') === category);
+        const filter = btn.getAttribute('data-filter');
+        btn.classList.toggle('active', filter === (favoritesOnly ? 'favorites' : category));
     });
+    updateFavoritesCount();
+}
+
+function loadFavorites() {
+    try {
+        const savedFavorites = localStorage.getItem(FAVORITES_STORAGE_KEY);
+        if (savedFavorites === null) return;
+
+        const parsedFavorites = JSON.parse(savedFavorites);
+        if (!Array.isArray(parsedFavorites)) {
+            throw new Error('Saved favorites are not in the expected format.');
+        }
+        favoriteVehicleIds = [...new Set(parsedFavorites.map(String))];
+    } catch (error) {
+        console.error('Could not load saved AutoBazaar favorites:', error);
+        showToast('Saved favorites could not be loaded from this browser.', 'error');
+    }
+}
+
+function toggleFavorite(id) {
+    const vehicleId = String(id);
+    const wasFavorite = favoriteVehicleIds.includes(vehicleId);
+    const updatedFavorites = wasFavorite
+        ? favoriteVehicleIds.filter(favoriteId => favoriteId !== vehicleId)
+        : [...favoriteVehicleIds, vehicleId];
+
+    try {
+        localStorage.setItem(FAVORITES_STORAGE_KEY, JSON.stringify(updatedFavorites));
+    } catch (error) {
+        console.error('Could not save AutoBazaar favorites:', error);
+        showToast('Your favorites could not be saved. Check your browser storage settings and try again.', 'error');
+        return;
+    }
+
+    favoriteVehicleIds = updatedFavorites;
+    showToast(wasFavorite ? 'Vehicle removed from favorites.' : 'Vehicle saved to favorites.', 'success');
+    applyVehicleFilters();
+}
+
+function updateFavoritesCount() {
+    const count = document.getElementById('favoriteCount');
+    if (count) count.textContent = String(favoriteVehicleIds.length);
 }
 
 function filterVehicles(filter) {
-    document.getElementById('categoryFilter').value = filter;
+    favoritesOnly = filter === 'favorites';
+    document.getElementById('categoryFilter').value = favoritesOnly ? 'all' : filter;
     showingAll = false;
     applyVehicleFilters();
 }
