@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">2
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutoBazaar | Premium Second-Hand Cars & Bikes</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../Styles/main.css">
+
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="#" class="logo">
+                <i class="fas fa-car"></i>
+                <span class="logo-text">Auto<span class="logo-highlight">Bazaar</span></span>
+            </a>
+            
+            <div class="nav-menu" id="navMenu">
+                <a href="#home" class="nav-link active">
+                    <i class="fas fa-home"></i> Home
+                </a>
+                
+                <a href="#sell" class="nav-link">
+                    <i class="fas fa-tag"></i> Sell
+                </a>
+                <a href="#vehicles" class="nav-link">
+                    <i class="fas fa-motorcycle"></i> Vehicles
+                </a>
+                <a href="#about" class="nav-link">
+                    <i class="fas fa-info-circle"></i> About
+                </a>
+                <a href="#contact" class="nav-link">
+                    <i class="fas fa-phone"></i> Contact
+                </a>
+                <a href="#feedback" class="nav-link">
+                    <i class="fas fa-comment-dots"></i> Feedback
+                </a>
+            </div>
+            
+            <div class="nav-actions">
+                <button class="btn btn-outline" id="loginBtn" aria-label="Log in" title="Log in">
+                    <i class="fas fa-sign-in-alt"></i> Login
+                </button>
+                <button class="btn btn-primary" id="registerBtn" aria-label="Register" title="Register">
+                    <i class="fas fa-user-plus"></i> Register
+                </button>
+                <button class="btn btn-outline" id="logoutBtn" aria-label="Log out" title="Log out" hidden>
+                    <i class="fas fa-sign-out-alt"></i> Log Out
+                </button>
+                <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu" aria-controls="navMenu" aria-expanded="false">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+    <div class="auth-notice" id="authNotice" role="status" aria-live="polite" hidden></div>
+
+    <!-- Hero Section -->
+    <section class="hero-section" id="home">
+        <div class="hero-content">
+            <h1 class="hero-title">Find your next ride</h1>
+            <p class="hero-subtitle">Browse pre-owned cars and bikes from sellers near you</p>
+            <div class="hero-search">
+                <form class="search-container" id="searchForm">
+                    <input type="search" placeholder="Search cars, bikes, brands..." class="search-input" id="vehicleSearch">
+                    <select class="search-select" id="locationFilter" aria-label="Filter by location">
+                        <option value="">All locations</option>
+                        <option value="mumbai">Mumbai</option>
+                        <option value="delhi">Delhi</option>
+                        <option value="bangalore">Bangalore</option>
+                    </select>
+                    <select class="search-select" id="categoryFilter" aria-label="Filter by vehicle type">
+                        <option value="all">All vehicles</option>
+                        <option value="car">Cars</option>
+                        <option value="bike">Bikes</option>
+                    </select>
+                   <button class="search-btn" type="submit">
+                        <i class="fas fa-search"></i> Search
+                    </button>
+                </form>
+            </div>
+            <div class="hero-stats">
+                <div class="stat-item">
+                    <h3>Cars</h3>
+                    <p>Browse local listings</p>
+                </div>
+                <div class="stat-item">
+                    <h3>Bikes</h3>
+                    <p>Explore trusted brands</p>
+                </div>
+                <div class="stat-item">
+                    <h3>Search</h3>
+                    <p>Find by make or model</p>
+                </div>
+                <div class="stat-item">
+                    <h3>Sell</h3>
+                    <p>List your vehicle</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Vehicles -->
+    <section class="section featured-section" id="vehicles">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Vehicles near you</h2>
+                <p class="section-subtitle">Car prices and specifications are sample values for display only. Verify the actual details with sellers.</p>
+                <div class="section-controls">
+                    <button class="filter-btn active" data-filter="all">All</button>
+                    <button class="filter-btn" data-filter="bike">
+                        <i class="fas fa-motorcycle"></i> Bikes
+                    </button>
+                    <button class="filter-btn" data-filter="car">
+                        <i class="fas fa-car"></i> Cars
+                    </button>
+                </div>
+            </div>
+            
+            <div class="vehicles-grid" id="vehiclesGrid">
+                <div class="carousel-container" id="carouselContainer">
+                    <!-- Vehicles loaded by JS -->
+                </div>
+            </div>
+            <p class="section-subtitle" id="vehicleResultsCount" aria-live="polite"></p>
+            
+            <div class="text-center">
+                <button class="btn btn-primary btn-lg" id="viewAllBtn" aria-expanded="false">
+                    <i class="fas fa-eye"></i> View All Vehicles
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="section steps-section" id="about">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">How AutoBazaar Works</h2>
+                <p class="section-subtitle">Simple, Secure, and Transparent Process</p>
+            </div>
+            
+            <div class="steps-container">
+                <div class="step-card">
+                    <div class="step-icon">
+                        <i class="fas fa-search"></i>
+                        <div class="step-number">1</div>
+                    </div>
+                    <h3>Browse & Select</h3>
+                    <p>Explore our verified inventory with detailed inspections</p>
+                </div>
+                
+                <div class="step-card">
+                    <div class="step-icon">
+                        <i class="fas fa-file-contract"></i>
+                        <div class="step-number">2</div>
+                    </div>
+                    <h3>Schedule Inspection</h3>
+                    <p>Book a free test drive and professional inspection</p>
+                </div>
+                
+                <div class="step-card">
+                    <div class="step-icon">
+                        <i class="fas fa-credit-card"></i>
+                        <div class="step-number">3</div>
+                    </div>
+                    <h3>Secure Payment</h3>
+                    <p>Multiple payment options with 100% secure transactions</p>
+                </div>
+                
+                <div class="step-card">
+                    <div class="step-icon">
+                        <i class="fas fa-key"></i>
+                        <div class="step-number">4</div>
+                    </div>
+                    <h3>Drive Home</h3>
+                    <p>Complete paperwork and drive home with warranty</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sell Section -->
+    <section class="section sell-section" id="sell">
+        <div class="container">
+            <div class="sell-banner">
+                <div class="sell-content">
+                    <h2>Sell Your Vehicle with Confidence</h2>
+                    <p>Get the best price for your car or bike with our expert valuation</p>
+                    <ul class="sell-features">
+                        <li><i class="fas fa-check-circle"></i> Free Vehicle Inspection</li>
+                        <li><i class="fas fa-check-circle"></i> Instant Payment</li>
+                        <li><i class="fas fa-check-circle"></i> Paperwork Assistance</li>
+                        <li><i class="fas fa-check-circle"></i> Nationwide Buyer Network</li>
+                    </ul>
+                    <button class="btn btn-secondary btn-lg" id="sellNowBtn">
+                        <i class="fas fa-tag"></i> Sell Now
+                    </button>
+                </div>
+                <img class="sell-image" src="../Assets/Images/sellimage.jpg" alt="Motorcycle for sale">
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="section" id="feedback">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">What Our Customers Say</h2>
+                <p class="section-subtitle">Join thousands of satisfied vehicle owners</p>
+            </div>
+            
+            <div class="testimonials-container" aria-live="polite">
+                <div class="testimonial-card">
+                    <div class="testimonial-rating">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p>"Bought my dream bike through AutoBazaar. The verification process gave me complete peace of mind!"</p>
+                    <div class="testimonial-author">
+                        <div style="width: 50px; height: 50px; border-radius: 50%; background: var(--primary); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">
+                            RK
+                        </div>
+                        <div>
+                            <h4>Rajesh Kumar</h4>
+                            <span>Yamaha R15 Owner</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="testimonial-card">
+                    <div class="testimonial-rating">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star-half-alt"></i>
+                    </div>
+                    <p>"Sold my car in 2 days! AutoBazaar's network and support made the process effortless."</p>
+                    <div class="testimonial-author">
+                        <div style="width: 50px; height: 50px; border-radius: 50%; background: var(--accent); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">
+                            PS
+                        </div>
+                        <div>
+                            <h4>Priya Sharma</h4>
+                            <span>Honda City Seller</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="testimonial-card">
+                    <div class="testimonial-rating">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p>"Excellent service! The detailed inspection report helped me make an informed decision."</p>
+                    <div class="testimonial-author">
+                        <div style="width: 50px; height: 50px; border-radius: 50%; background: var(--success); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">
+                            AP
+                        </div>
+                        <div>
+                            <h4>Amit Patel</h4>
+                            <span>Hyundai Creta Buyer</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="feedback-panel">
+                <div class="feedback-panel-heading">
+                    <h3><i class="fas fa-comment-dots" aria-hidden="true"></i> Share Your Feedback</h3>
+                    <button type="button" class="btn btn-outline feedback-mode-toggle" id="toggleFeedbackDeleteMode" aria-pressed="false">
+                        <i class="fas fa-trash" aria-hidden="true"></i>
+                        <span>Remove Feedback</span>
+                    </button>
+                </div>
+                <form id="feedbackForm">
+                    <div class="form-group">
+                        <label for="feedbackName">Your name</label>
+                        <input type="text" id="feedbackName" name="name" maxlength="50" required>
+                    </div>
+                    <fieldset class="feedback-rating">
+                        <legend>Your rating</legend>
+                        <div class="rating-stars">
+                            <input type="radio" id="feedbackRating5" name="rating" value="5" required>
+                            <label for="feedbackRating5" aria-label="5 stars"><i class="fas fa-star" aria-hidden="true"></i></label>
+                            <input type="radio" id="feedbackRating4" name="rating" value="4">
+                            <label for="feedbackRating4" aria-label="4 stars"><i class="fas fa-star" aria-hidden="true"></i></label>
+                            <input type="radio" id="feedbackRating3" name="rating" value="3">
+                            <label for="feedbackRating3" aria-label="3 stars"><i class="fas fa-star" aria-hidden="true"></i></label>
+                            <input type="radio" id="feedbackRating2" name="rating" value="2">
+                            <label for="feedbackRating2" aria-label="2 stars"><i class="fas fa-star" aria-hidden="true"></i></label>
+                            <input type="radio" id="feedbackRating1" name="rating" value="1">
+                            <label for="feedbackRating1" aria-label="1 star"><i class="fas fa-star" aria-hidden="true"></i></label>
+                        </div>
+                    </fieldset>
+                    <div class="form-group">
+                        <label for="feedbackMessage">Your feedback</label>
+                        <textarea id="feedbackMessage" name="message" rows="4" maxlength="500" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-paper-plane" aria-hidden="true"></i> Submit Feedback
+                    </button>
+                    <p id="feedbackStatus" class="feedback-status" role="status" aria-live="polite"></p>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="section contact-section" id="contact">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Contact Us</h2>
+                <p class="section-subtitle">Get in touch with our automotive experts</p>
+            </div>
+            
+            <div class="contact-container">
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <div>
+                            <h3>Visit Our Showroom</h3>
+                            <p>12,Tamilarasi Street,Aruppukottai,Tamilnadu,626101.</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-phone"></i>
+                        <div>
+                            <h3>Call Us</h3>
+                            <p>+91 1234567890</p>
+                            <p>Mon-Sun: 8:00 AM - 10:00 PM</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-envelope"></i>
+                        <div>
+                            <h3>Email Us</h3>
+                            <p>support#AutoBazzarSite@gmail.com</p>
+                            <p>sales@autobazaar.com</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="contact-form">
+                    <form id="contactForm">
+                        <div class="form-group">
+                            <input type="text" placeholder="Your Name" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="email" placeholder="Your Email" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="tel" placeholder="Your Phone" required>
+                        </div>
+                        <div class="form-group">
+                            <select required>
+                                <option value="">Select Service</option>
+                                <option value="buy">Buy Vehicle</option>
+                                <option value="sell">Sell Vehicle</option>
+                                <option value="other">Other Query</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <textarea placeholder="Your Message" rows="4" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-paper-plane"></i> Send Message
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="logo" style="margin-bottom: 1rem;">
+                        <i class="fas fa-car"></i>
+                        <span class="logo-text">Auto<span class="logo-highlight">Bazaar</span></span>
+                    </div>
+                    <p>India's trusted marketplace for pre-owned cars and bikes.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#buy">Buy Vehicle</a></li>
+                        <li><a href="#sell">Sell Vehicle</a></li>
+                        <li><a href="#vehicles">Featured Vehicles</a></li>
+                        <li><a href="#contact">Contact Us</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Categories</h3>
+                    <ul>
+                        <li><a href="#">Sedan Cars</a></li>
+                        <li><a href="#">SUV Cars</a></li>
+                        <li><a href="#">Sports Bikes</a></li>
+                        <li><a href="#">Commuter Bikes</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2026 AutoBazaar. All rights reserved.</p>
+                <div class="payment-methods-footer">
+                    <i class="fab fa-cc-visa"></i>
+                    <i class="fab fa-cc-mastercard"></i>
+                    <i class="fab fa-cc-amex"></i>
+                    <i class="fab fa-cc-paypal"></i>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Login/Register Modal -->
+    <div class="modal" id="authModal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <div class="modal-body">
+                <div class="auth-feedback" id="authFeedback" role="status" aria-live="polite" hidden></div>
+                <div class="auth-tabs">
+                    <button class="auth-tab active" data-tab="login">Login</button>
+                    <button class="auth-tab" data-tab="register">Register</button>
+                </div>
+                
+                <div class="auth-form active" id="loginForm">
+                    <div class="form-header">
+                        <h3>Welcome Back</h3>
+                        <p>Login to your AutoBazaar account</p>
+                    </div>
+                    <form id="loginFormData">
+                        <div class="form-group">
+                            <input type="email" name="email" id="loginEmail" placeholder="Email Address" autocomplete="email" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="password" name="password" id="loginPassword" placeholder="Password" autocomplete="current-password" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">
+                            <i class="fas fa-sign-in-alt"></i> Login
+                        </button>
+                    </form>
+                </div>
+                
+                <div class="auth-form" id="registerForm">
+                    <div class="form-header">
+                        <h3>Create Account</h3>
+                        <p>Join AutoBazaar community</p>
+                    </div>
+                    <form id="registerFormData">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <input type="text" name="name" id="registerName" placeholder="Full Name" autocomplete="name" maxlength="50" required>
+                            </div>
+                            <div class="form-group">
+                                <input type="email" name="email" id="registerEmail" placeholder="Email Address" autocomplete="email" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <input type="tel" name="phone" id="registerPhone" placeholder="10-digit Phone Number" autocomplete="tel" inputmode="numeric" pattern="[0-9]{10}" maxlength="10" required>
+                            </div>
+                            <div class="form-group">
+                                <input type="text" name="city" id="registerCity" placeholder="City" autocomplete="address-level2" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <textarea name="address" id="registerAddress" placeholder="Address" autocomplete="street-address" rows="2" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <select name="userType" id="registerUserType" required>
+                                <option value="">I want to...</option>
+                                <option value="buy">Buy Vehicles</option>
+                                <option value="sell">Sell Vehicles</option>
+                                <option value="both">Both</option>
+                            </select>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <input type="password" name="password" id="registerPassword" placeholder="Password (at least 6 characters)" autocomplete="new-password" minlength="6" required>
+                            </div>
+                            <div class="form-group">
+                                <input type="password" name="confirmPassword" id="registerConfirmPassword" placeholder="Confirm Password" autocomplete="new-password" minlength="6" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">
+                            <i class="fas fa-user-plus"></i> Create Account
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sell Vehicle Modal -->
+    <div class="modal" id="sellModal">
+        <div class="modal-content" style="max-width: 800px;">
+            <span class="close-modal">&times;</span>
+            <div class="modal-body">
+                <h2 style="text-align: center; margin-bottom: 2rem; color: var(--secondary);">Sell Your Vehicle</h2>
+                <form id="sellVehicleForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label style="display: block; margin-bottom: 8px; color: var(--secondary);">Vehicle Type</label>
+                            <div style="display: flex; gap: 2rem;">
+                                <label style="display: flex; align-items: center; gap: 8px;">
+                                    <input type="radio" name="vehicleType" value="car" checked>
+                                    <i class="fas fa-car"></i> Car
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 8px;">
+                                    <input type="radio" name="vehicleType" value="bike">
+                                    <i class="fas fa-motorcycle"></i> Bike
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <input type="text" placeholder="Vehicle Brand & Model" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" placeholder="Registration Number" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <input type="text" placeholder="RC Number" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="number" placeholder="Model Year" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <input type="number" placeholder="Price (₹)" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="number" placeholder="Kilometers Driven" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <select required>
+                                <option value="">Fuel Type</option>
+                                <option value="petrol">Petrol</option>
+                                <option value="diesel">Diesel</option>
+                                <option value="electric">Electric</option>
+                                <option value="cng">CNG</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <select required>
+                                <option value="">Transmission</option>
+                                <option value="manual">Manual</option>
+                                <option value="automatic">Automatic</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <textarea placeholder="Description (condition, features, reason for selling...)" rows="4" required></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label style="display: block; margin-bottom: 8px; color: var(--secondary);">Upload Photos (Minimum 5)</label>
+                        <div style="border: 2px dashed var(--light-gray); border-radius: var(--radius-lg); padding: 2rem; text-align: center; cursor: pointer;" id="uploadZone">
+                            <i class="fas fa-cloud-upload-alt" style="font-size: 3rem; color: var(--primary); margin-bottom: 1rem;"></i>
+                            <p>Click or drag to upload vehicle photos</p>
+                            <small>Maximum 10 photos, 5MB each</small>
+                            <input type="file" multiple accept="image/*" style="display: none;" id="photoUpload">
+                        </div>
+                        <div id="photoPreview" style="margin-top: 1rem;"></div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">
+                        <i class="fas fa-tag"></i> List Vehicle for Sale
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="toast-stack" id="toastStack" aria-live="polite"></div>
+
+    <script src="../Scripts/auth-api.js"></script>
+    <script src="../Scripts/main.js"></script>
+</body>
+</html>
