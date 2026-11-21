@@ -210,24 +210,19 @@ h1, h2, h3, h4, h5, h6 {
     flex: 0 0 auto;
 }
 
-.logo i {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+.logo-icon {
+    display: block;
     flex: 0 0 38px;
     width: 38px;
     height: 38px;
-    font-size: 1.05rem;
-    line-height: 1;
-    color: #fff;
-    background: var(--gradient-primary);
-    border-radius: 12px;
-    box-shadow: 0 6px 16px -4px rgba(255, 106, 0, 0.55);
+    object-fit: cover;
+    border-radius: 50%;
+    box-shadow: 0 4px 12px rgba(35, 19, 9, 0.25);
     transition: transform 0.3s ease;
 }
 
-.logo:hover i {
-    transform: rotate(-8deg) scale(1.06);
+.logo:hover .logo-icon {
+    transform: scale(1.06);
 }
 
 .logo-text {
@@ -480,7 +475,7 @@ h1, h2, h3, h4, h5, h6 {
     .nav-container,
     .nav-link,
     .nav-menu,
-    .logo i {
+    .logo-icon {
         transition: none;
     }
 }
@@ -1915,7 +1910,6 @@ body {
 .btn-secondary { background: linear-gradient(135deg, #1b1038, #3a1c5c); }
 .btn-secondary:hover { background: linear-gradient(135deg, #2a1857, #55287f); }
 .back-to-top { background: var(--grad-sunset); }
-.logo i { background: var(--grad-sunset); }
 .nav-container::after { background: linear-gradient(90deg, #ffb347, #ff6a00, #f0412a); }
 .section-title::after { background: var(--grad-sunset); }
 

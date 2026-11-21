@@ -34,17 +34,14 @@
     text-decoration: none;
 }
 
-.auth-brand > i {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+.auth-brand-icon {
+    display: block;
+    flex: 0 0 38px;
     width: 38px;
     height: 38px;
-    font-size: 1.05rem;
-    color: #fff;
-    background: var(--grad-sunset);
-    border-radius: 12px;
-    box-shadow: 0 6px 16px -4px rgba(255, 106, 0, 0.6);
+    object-fit: cover;
+    border-radius: 50%;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 .auth-brand span span { color: #ffa24d; }
