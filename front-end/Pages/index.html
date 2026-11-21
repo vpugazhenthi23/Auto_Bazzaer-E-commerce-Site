@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AutoBazaar | Premium Second-Hand Cars & Bikes</title>
-    <link rel="icon" type="image/png" href="../Assets/Images/Icon2.png">
+    <link rel="icon" type="image/png" href="../Assets/Images/Icon2.pnggir">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../Styles/main.css">
@@ -111,7 +111,7 @@
         <div class="container">
             <div class="section-header">
                 <h2 class="section-title">Vehicles near you</h2>
-                <p class="section-subtitle">Save vehicles to your Favorites and view them later. Car prices and specifications are sample values for display only; verify details with sellers.</p>
+                <p class="section-subtitle">Save vehicles to your Favorites or compare up to four side by side by price, year, mileage, fuel, and transmission. Car prices and specifications are sample values for display only; verify details with sellers.</p>
                 <div class="section-controls">
                     <button class="filter-btn active" data-filter="all">All</button>
                     <button class="filter-btn" data-filter="bike">
@@ -122,6 +122,18 @@
                     </button>
                     <button class="filter-btn favorites-filter" data-filter="favorites">
                         <i class="fas fa-heart"></i> Favorites <span class="favorites-count" id="favoriteCount">0</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="compare-toolbar" id="compareToolbar" hidden>
+                <span id="compareSelectionStatus" aria-live="polite"></span>
+                <div class="compare-toolbar-actions">
+                    <button class="btn btn-primary" type="button" id="compareSelectedBtn" disabled>
+                        <i class="fas fa-balance-scale" aria-hidden="true"></i> Compare vehicles (0)
+                    </button>
+                    <button class="btn btn-outline" type="button" id="clearCompareBtn">
+                        Clear selection
                     </button>
                 </div>
             </div>
@@ -439,6 +451,38 @@
             </div>
         </div>
     </footer>
+
+    <!-- Vehicle comparison modal -->
+    <div class="modal compare-modal" id="compareModal" role="dialog" aria-modal="true" aria-labelledby="compareModalTitle">
+        <div class="modal-content compare-modal-content">
+            <button class="close-modal" type="button" aria-label="Close comparison">&times;</button>
+            <div class="modal-body">
+                <div class="compare-modal-heading">
+                    <h2 id="compareModalTitle">Compare vehicles</h2>
+                    <button class="compare-clear-all" type="button" id="clearCompareModalBtn" aria-label="Clear all vehicles from comparison" title="Clear comparison">
+                        <i class="fas fa-trash-can" aria-hidden="true"></i>
+                    </button>
+                </div>
+                <div class="compare-add-controls" id="compareAddControls">
+                    <label for="compareAddSelect">Add another vehicle</label>
+                    <div class="compare-add-actions">
+                        <select id="compareAddSelect">
+                            <option value="">Select a vehicle</option>
+                        </select>
+                        <button class="btn btn-primary" type="button" id="addCompareVehicleBtn" disabled>
+                            <i class="fas fa-plus" aria-hidden="true"></i> Add vehicle
+                        </button>
+                    </div>
+                </div>
+                <div class="compare-table-wrap" tabindex="0" aria-label="Vehicle comparison table">
+                    <table class="compare-table">
+                        <thead id="compareTableHead"></thead>
+                        <tbody id="compareTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Login/Register Modal -->
     <div class="modal" id="authModal">

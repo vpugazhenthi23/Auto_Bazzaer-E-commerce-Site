@@ -36,7 +36,9 @@ const allVehiclesData = [...carPhotoListings, ...allBikesData];
 const initialVehiclesData = [...carPhotoListings.slice(0, 3), ...allBikesData.slice(0, 3)];
 let vehiclesData = [...initialVehiclesData];
 const FAVORITES_STORAGE_KEY = 'autobazaarFavorites';
+const MAX_COMPARE_VEHICLES = 4;
 let favoriteVehicleIds = [];
+let comparedVehicleIds = [];
 let favoritesOnly = false;
 const AUTH_API = window.AutoBazaarAuthAPI;
 const AUTH_STORAGE_KEY = AUTH_API.storageKey;
@@ -56,6 +58,14 @@ const sellNowBtn = document.getElementById('sellNowBtn');
 const viewAllBtn = document.getElementById('viewAllBtn');
 const vehiclesGrid = document.getElementById('vehiclesGrid');
 const carouselContainer = document.getElementById('carouselContainer');
+const compareToolbar = document.getElementById('compareToolbar');
+const compareSelectionStatus = document.getElementById('compareSelectionStatus');
+const compareSelectedBtn = document.getElementById('compareSelectedBtn');
+const clearCompareBtn = document.getElementById('clearCompareBtn');
+const compareAddControls = document.getElementById('compareAddControls');
+const compareAddSelect = document.getElementById('compareAddSelect');
+const addCompareVehicleBtn = document.getElementById('addCompareVehicleBtn');
+const clearCompareModalBtn = document.getElementById('clearCompareModalBtn');
 const filterBtns = document.querySelectorAll('.filter-btn');
 const closeModalBtns = document.querySelectorAll('.close-modal');
 const authTabs = document.querySelectorAll('.auth-tab');
@@ -106,6 +116,7 @@ function renderVehicles(vehicles) {
         carouselContainer.innerHTML = favoritesOnly
             ? '<p class="empty-state">No saved vehicles match the current filters. Select the heart on a vehicle to add it to your favorites.</p>'
             : '<p class="empty-state">No vehicles match your search. Try another make, model, or location.</p>';
+        updateCompareControls();
         return;
     }
     
@@ -127,6 +138,7 @@ function renderVehicles(vehicles) {
                 <span>${item.text}</span>
             </div>
         `).join('');
+        const isCompared = comparedVehicleIds.includes(String(vehicle.id));
         
         vehicleCard.innerHTML = `
             <div class="vehicle-badge">${vehicle.type === 'car' ? (vehicle.isPhotoPreview ? 'Sample Car' : 'Car') : 'Bike'}</div>
@@ -146,6 +158,9 @@ function renderVehicles(vehicles) {
                     </button>
                     <button class="btn btn-primary buy-now" data-id="${vehicle.id}">
                         <i class="fas fa-shopping-cart"></i> Buy Now
+                    </button>
+                    <button class="btn btn-outline compare-toggle${isCompared ? ' is-selected' : ''}" type="button" data-id="${vehicle.id}" aria-pressed="${isCompared}" aria-label="${isCompared ? 'Remove' : 'Add'} ${vehicle.name} ${isCompared ? 'from' : 'to'} comparison">
+                        <i class="fas ${isCompared ? 'fa-check' : 'fa-balance-scale'}" aria-hidden="true"></i> ${isCompared ? 'Added to compare' : 'Compare'}
                     </button>
                 </div>
             </div>
@@ -179,6 +194,13 @@ function renderVehicles(vehicles) {
             toggleFavorite(this.getAttribute('data-id'));
         });
     });
+
+    document.querySelectorAll('.compare-toggle').forEach(btn => {
+        btn.addEventListener('click', function() {
+            toggleVehicleComparison(this.getAttribute('data-id'));
+        });
+    });
+    updateCompareControls();
 }
 
 // ====== EVENT HANDLERS ======
@@ -240,6 +262,14 @@ function setupEventListeners() {
         showingAll = false;
         applyVehicleFilters();
     });
+    compareSelectedBtn.addEventListener('click', showVehicleComparison);
+    clearCompareBtn.addEventListener('click', clearVehicleComparison);
+    compareAddSelect.addEventListener('change', () => {
+        addCompareVehicleBtn.disabled = !compareAddSelect.value
+            || comparedVehicleIds.length >= MAX_COMPARE_VEHICLES;
+    });
+    addCompareVehicleBtn.addEventListener('click', addVehicleToComparison);
+    clearCompareModalBtn.addEventListener('click', clearVehicleComparisonFromModal);
 
     // Close modals
     closeModalBtns.forEach(btn => {
@@ -470,6 +500,208 @@ function toggleFavorite(id) {
 function updateFavoritesCount() {
     const count = document.getElementById('favoriteCount');
     if (count) count.textContent = String(favoriteVehicleIds.length);
+}
+
+function toggleVehicleComparison(id) {
+    const vehicleId = String(id);
+    if (comparedVehicleIds.includes(vehicleId)) {
+        comparedVehicleIds = comparedVehicleIds.filter(comparedId => comparedId !== vehicleId);
+    } else if (comparedVehicleIds.length >= MAX_COMPARE_VEHICLES) {
+        showToast(`You can compare up to ${MAX_COMPARE_VEHICLES} vehicles at a time. Remove one to add another.`, 'info');
+        return;
+    } else {
+        comparedVehicleIds.push(vehicleId);
+    }
+
+    updateCompareControls();
+}
+
+function updateCompareControls() {
+    const selectedCount = comparedVehicleIds.length;
+    compareToolbar.hidden = selectedCount === 0;
+    compareSelectedBtn.disabled = selectedCount === 0;
+    compareSelectedBtn.innerHTML = `<i class="fas fa-balance-scale" aria-hidden="true"></i> Compare vehicles (${selectedCount})`;
+    compareAddControls.hidden = selectedCount >= MAX_COMPARE_VEHICLES;
+
+    if (selectedCount < 2) {
+        compareSelectionStatus.textContent = `${selectedCount} vehicle selected. Choose one more to compare.`;
+    } else if (selectedCount === MAX_COMPARE_VEHICLES) {
+        compareSelectionStatus.textContent = `${selectedCount} vehicles selected (maximum).`;
+    } else {
+        compareSelectionStatus.textContent = `${selectedCount} vehicles selected. Add one more or compare now.`;
+    }
+
+    document.querySelectorAll('.compare-toggle').forEach(button => {
+        const vehicleId = button.getAttribute('data-id');
+        const vehicle = allVehiclesData.find(item => String(item.id) === vehicleId);
+        const isSelected = comparedVehicleIds.includes(vehicleId);
+        button.classList.toggle('is-selected', isSelected);
+        button.setAttribute('aria-pressed', String(isSelected));
+        button.disabled = !isSelected && selectedCount >= MAX_COMPARE_VEHICLES;
+        button.setAttribute(
+            'aria-label',
+            `${isSelected ? 'Remove' : 'Add'} ${vehicle.name} ${isSelected ? 'from' : 'to'} comparison`
+        );
+        button.innerHTML = `<i class="fas ${isSelected ? 'fa-check' : 'fa-balance-scale'}" aria-hidden="true"></i> ${isSelected ? 'Added to compare' : 'Compare'}`;
+    });
+
+    const selectedOption = compareAddSelect.value;
+    const availableVehicles = allVehiclesData.filter(
+        vehicle => !comparedVehicleIds.includes(String(vehicle.id))
+    );
+    const placeholder = document.createElement('option');
+    placeholder.value = '';
+    placeholder.textContent = 'Select a vehicle';
+    compareAddSelect.replaceChildren(
+        placeholder,
+        ...availableVehicles.map(vehicle => {
+            const option = document.createElement('option');
+            option.value = String(vehicle.id);
+            option.textContent = vehicle.name;
+            return option;
+        })
+    );
+    compareAddSelect.value = availableVehicles.some(
+        vehicle => String(vehicle.id) === selectedOption
+    ) ? selectedOption : '';
+    addCompareVehicleBtn.disabled = !compareAddSelect.value
+        || selectedCount >= MAX_COMPARE_VEHICLES;
+}
+
+function clearVehicleComparison() {
+    comparedVehicleIds = [];
+    updateCompareControls();
+}
+
+function clearVehicleComparisonFromModal() {
+    clearVehicleComparison();
+    renderVehicleComparisonTable([]);
+    compareAddSelect.focus();
+}
+
+function getComparedVehicles() {
+    return comparedVehicleIds
+        .map(id => allVehiclesData.find(vehicle => String(vehicle.id) === id))
+        .filter(Boolean);
+}
+
+function renderVehicleComparisonTable(vehicles) {
+    const tableHead = document.getElementById('compareTableHead');
+    const tableBody = document.getElementById('compareTableBody');
+    if (!vehicles.length) {
+        tableHead.replaceChildren();
+        const row = document.createElement('tr');
+        const message = document.createElement('td');
+        message.className = 'compare-empty-state';
+        message.colSpan = MAX_COMPARE_VEHICLES + 1;
+        message.textContent = 'No vehicles in the comparison list. Add a minimum of 2 vehicles.';
+        row.appendChild(message);
+        tableBody.replaceChildren(row);
+        return;
+    }
+
+    const headingRow = document.createElement('tr');
+    const specificationHeading = document.createElement('th');
+    specificationHeading.scope = 'col';
+    specificationHeading.textContent = 'Specification';
+    headingRow.appendChild(specificationHeading);
+
+    vehicles.forEach(vehicle => {
+        const heading = document.createElement('th');
+        heading.scope = 'col';
+        const vehicleHeader = document.createElement('div');
+        vehicleHeader.className = 'compare-vehicle-heading';
+        const image = document.createElement('img');
+        image.className = 'compare-vehicle-image';
+        image.src = vehicle.image;
+        image.alt = '';
+        const removeButton = document.createElement('button');
+        removeButton.className = 'compare-remove-btn';
+        removeButton.type = 'button';
+        removeButton.setAttribute('aria-label', `Remove ${vehicle.name} from comparison`);
+        removeButton.innerHTML = '<i class="fas fa-times" aria-hidden="true"></i>';
+        removeButton.addEventListener('click', () => removeVehicleFromComparison(vehicle.id));
+        const vehicleInfo = document.createElement('div');
+        vehicleInfo.className = 'compare-vehicle-info';
+        const name = document.createElement('span');
+        name.className = 'compare-vehicle-name';
+        name.textContent = vehicle.name;
+        const type = document.createElement('span');
+        type.className = 'compare-vehicle-type';
+        type.textContent = vehicle.type === 'car' ? 'Car' : 'Bike';
+        vehicleInfo.append(name, type);
+        vehicleHeader.append(image, removeButton, vehicleInfo);
+        heading.appendChild(vehicleHeader);
+        headingRow.appendChild(heading);
+    });
+    tableHead.replaceChildren(headingRow);
+
+    const comparisons = [
+        ['Price', vehicle => `₹${vehicle.price}`],
+        ['Year', vehicle => String(vehicle.year)],
+        ['Mileage', vehicle => `${vehicle.km} km`],
+        ['Fuel', vehicle => vehicle.fuel],
+        ['Transmission', vehicle => vehicle.transmission]
+    ];
+    tableBody.replaceChildren(...comparisons.map(([label, getValue]) => {
+        const row = document.createElement('tr');
+        const rowHeading = document.createElement('th');
+        rowHeading.scope = 'row';
+        rowHeading.textContent = label;
+        row.appendChild(rowHeading);
+
+        vehicles.forEach(vehicle => {
+            const cell = document.createElement('td');
+            cell.textContent = getValue(vehicle);
+            row.appendChild(cell);
+        });
+        return row;
+    }));
+}
+
+function showVehicleComparison() {
+    const vehicles = getComparedVehicles();
+    if (!vehicles.length) return;
+
+    renderVehicleComparisonTable(vehicles);
+    openModal('compareModal');
+    document.querySelector('#compareModal .close-modal').focus();
+}
+
+function addVehicleToComparison() {
+    const vehicleId = compareAddSelect.value;
+    if (!vehicleId || comparedVehicleIds.includes(vehicleId)) return;
+    if (comparedVehicleIds.length >= MAX_COMPARE_VEHICLES) {
+        showToast(`You can compare up to ${MAX_COMPARE_VEHICLES} vehicles at a time.`, 'info');
+        return;
+    }
+
+    const vehicle = allVehiclesData.find(item => String(item.id) === vehicleId);
+    if (!vehicle) return;
+
+    comparedVehicleIds.push(vehicleId);
+    updateCompareControls();
+    renderVehicleComparisonTable(getComparedVehicles());
+    document.querySelectorAll('.compare-remove-btn').forEach(button => {
+        if (button.getAttribute('aria-label') === `Remove ${vehicle.name} from comparison`) {
+            button.focus();
+        }
+    });
+}
+
+function removeVehicleFromComparison(id) {
+    comparedVehicleIds = comparedVehicleIds.filter(comparedId => comparedId !== String(id));
+    updateCompareControls();
+
+    const vehicles = getComparedVehicles();
+    if (!vehicles.length) {
+        renderVehicleComparisonTable([]);
+        compareAddSelect.focus();
+        return;
+    }
+
+    renderVehicleComparisonTable(vehicles);
+    document.querySelector('#compareTableHead .compare-remove-btn')?.focus();
 }
 
 function filterVehicles(filter) {
