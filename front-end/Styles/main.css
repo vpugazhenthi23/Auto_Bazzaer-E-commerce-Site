@@ -866,14 +866,26 @@ h1, h2, h3, h4, h5, h6 {
     margin: 1.25rem auto 0;
     padding: 1rem 1.25rem;
     color: var(--secondary);
-    background: #fff;
-    border: 1px solid rgba(43, 26, 16, 0.1);
+    background: rgba(255, 255, 255, 0.58);
+    border: 1px solid rgba(43, 26, 16, 0.12);
     border-radius: 16px;
     box-shadow: var(--shadow-sm);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
 }
 
 .compare-toolbar[hidden] {
     display: none;
+}
+
+#compareSelectionStatus {
+    min-height: 42px;
+    display: inline-flex;
+    align-items: center;
+    padding: 0.65rem 0.85rem;
+    background: transparent;
+    border-radius: 10px;
+    font-weight: 600;
 }
 
 .compare-toolbar-actions {
@@ -1113,10 +1125,10 @@ h1, h2, h3, h4, h5, h6 {
 
 .compare-table .compare-empty-state {
     padding: 2rem 1.25rem;
-    color: #78695e;
+    color: rgba(120, 105, 94, 0.35);
     font-weight: 600;
     text-align: center;
-    background: #fffaf6;
+    background: rgba(255, 250, 246, 0.55);
 }
 
 .compare-table tbody tr:nth-child(even) {
