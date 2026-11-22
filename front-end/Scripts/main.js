@@ -47,6 +47,8 @@ const requestAuth = AUTH_API.requestAuth;
 // ====== DOM ELEMENTS ======
 const navMenu = document.getElementById('navMenu');
 const menuToggle = document.getElementById('menuToggle');
+const sidebarClose = document.getElementById('sidebarClose');
+const navbar = document.querySelector('.navbar');
 const authModal = document.getElementById('authModal');
 const sellModal = document.getElementById('sellModal');
 const loginBtn = document.getElementById('loginBtn');
@@ -205,20 +207,25 @@ function renderVehicles(vehicles) {
 
 // ====== EVENT HANDLERS ======
 function setupEventListeners() {
-    // Mobile menu toggle
+    // Sidebar navigation toggle
     menuToggle.addEventListener('click', () => {
-        navMenu.classList.toggle('active');
-        menuToggle.setAttribute('aria-expanded', String(navMenu.classList.contains('active')));
-        menuToggle.innerHTML = navMenu.classList.contains('active') 
-            ? '<i class="fas fa-times"></i>' 
-            : '<i class="fas fa-bars"></i>';
+        setNavMenuOpen(!navMenu.classList.contains('active'));
+    });
+    sidebarClose.addEventListener('click', () => {
+        setNavMenuOpen(false);
+        menuToggle.focus();
     });
 
-    // Close mobile menu when clicking outside
+    // Close the sidebar when clicking outside or pressing Escape.
     document.addEventListener('click', (e) => {
         if (!navMenu.contains(e.target) && !menuToggle.contains(e.target)) {
-            navMenu.classList.remove('active');
-            menuToggle.innerHTML = '<i class="fas fa-bars"></i>';
+            setNavMenuOpen(false);
+        }
+    });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && navMenu.classList.contains('active')) {
+            setNavMenuOpen(false);
+            menuToggle.focus();
         }
     });
 
@@ -314,9 +321,7 @@ function setupEventListeners() {
             // Add active class to clicked link
             this.classList.add('active');
             
-            // Close mobile menu
-            navMenu.classList.remove('active');
-            menuToggle.innerHTML = '<i class="fas fa-bars"></i>';
+            setNavMenuOpen(false);
             
             // Scroll to section
             const targetId = this.getAttribute('href').substring(1);
@@ -362,10 +367,16 @@ function setupEventListeners() {
     }
 }
 
+function setNavMenuOpen(isOpen) {
+    navMenu.classList.toggle('active', isOpen);
+    navbar.classList.toggle('menu-open', isOpen);
+    menuToggle.setAttribute('aria-expanded', String(isOpen));
+    menuToggle.innerHTML = isOpen
+        ? '<i class="fas fa-times" aria-hidden="true"></i>'
+        : '<i class="fas fa-bars" aria-hidden="true"></i>';
+}
+
 function handleScroll() {
-    const navbar = document.querySelector('.navbar');
-    const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-    navbar.style.setProperty('--scroll-progress', maxScroll > 0 ? Math.min(window.scrollY / maxScroll, 1) : 0);
     if (window.scrollY > 100) {
         navbar.classList.add('scrolled');
     } else {

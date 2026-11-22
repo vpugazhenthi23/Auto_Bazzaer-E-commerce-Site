@@ -13,48 +13,78 @@
     <!-- Navigation Bar -->
     <nav class="navbar">
         <div class="container nav-container">
-            <a href="#" class="logo">
-                <img class="logo-icon" src="../Assets/Images/Icon.png" alt="">
-                <span class="logo-text">Auto<span class="logo-highlight">Bazaar</span></span>
-            </a>
-            
-            <div class="nav-menu" id="navMenu">
-                <a href="#home" class="nav-link active">
-                    <i class="fas fa-home"></i> Home
-                </a>
-                
-                <a href="#sell" class="nav-link">
-                    <i class="fas fa-tag"></i> Sell
-                </a>
-                <a href="#vehicles" class="nav-link">
-                    <i class="fas fa-motorcycle"></i> Vehicles
-                </a>
-                <a href="#vehicles" class="nav-link" data-filter="favorites">
-                    <i class="fas fa-heart"></i> Favorites
-                </a>
-                <a href="#about" class="nav-link">
-                    <i class="fas fa-info-circle"></i> About
-                </a>
-                <a href="#contact" class="nav-link">
-                    <i class="fas fa-phone"></i> Contact
-                </a>
-                <a href="#feedback" class="nav-link">
-                    <i class="fas fa-comment-dots"></i> Feedback
-                </a>
+            <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation menu" aria-controls="navMenu" aria-expanded="false">
+                <i class="fas fa-bars" aria-hidden="true"></i>
+            </button>
+            <form class="search-container nav-search" id="searchForm">
+                <input type="search" placeholder="Search cars, bikes, brands..." class="search-input" id="vehicleSearch">
+                <select class="search-select" id="locationFilter" aria-label="Filter by location">
+                    <option value="">All locations</option>
+                    <option value="mumbai">Mumbai</option>
+                    <option value="delhi">Delhi</option>
+                    <option value="bangalore">Bangalore</option>
+                </select>
+                <select class="search-select" id="categoryFilter" aria-label="Filter by vehicle type">
+                    <option value="all">All vehicles</option>
+                    <option value="car">Cars</option>
+                    <option value="bike">Bikes</option>
+                </select>
+                <button class="search-btn" type="submit">
+                    <i class="fas fa-search" aria-hidden="true"></i> Search
+                </button>
+            </form>
+        </div>
+        <div class="nav-menu" id="navMenu" role="navigation" aria-label="Sidebar navigation">
+            <div class="sidebar-header">
+                <div class="sidebar-heading">
+                    <span class="sidebar-kicker">WELCOME TO</span>
+                    <h2>AutoBazaar</h2>
+                    <p>Find the ride that fits you.</p>
+                </div>
+                <button class="sidebar-close" id="sidebarClose" type="button" aria-label="Close navigation menu">
+                    <i class="fas fa-times" aria-hidden="true"></i>
+                </button>
             </div>
-            
-            <div class="nav-actions">
-                <button class="btn btn-outline" id="loginBtn" aria-label="Log in" title="Log in">
-                    <i class="fas fa-sign-in-alt"></i> Login
+
+            <div class="sidebar-links">
+                <div class="sidebar-link-group">
+                    <a href="#home" class="nav-link active">
+                        <i class="fas fa-home" aria-hidden="true"></i> Home
+                    </a>
+                    <a href="#sell" class="nav-link">
+                        <i class="fas fa-tag" aria-hidden="true"></i> Sell
+                    </a>
+                    <a href="#vehicles" class="nav-link">
+                        <i class="fas fa-motorcycle" aria-hidden="true"></i> Vehicles
+                    </a>
+                </div>
+                <div class="sidebar-link-group">
+                    <a href="#vehicles" class="nav-link" data-filter="favorites">
+                        <i class="fas fa-heart" aria-hidden="true"></i> Favorites
+                    </a>
+                </div>
+                <div class="sidebar-link-group">
+                    <a href="#about" class="nav-link">
+                        <i class="fas fa-info-circle" aria-hidden="true"></i> About
+                    </a>
+                    <a href="#contact" class="nav-link">
+                        <i class="fas fa-phone" aria-hidden="true"></i> Contact
+                    </a>
+                    <a href="#feedback" class="nav-link">
+                        <i class="fas fa-comment-dots" aria-hidden="true"></i> Feedback
+                    </a>
+                </div>
+            </div>
+
+            <div class="sidebar-auth-actions">
+                <button class="btn btn-outline" id="loginBtn" type="button" aria-label="Log in">
+                    <i class="fas fa-sign-in-alt" aria-hidden="true"></i> Login
                 </button>
-                <button class="btn btn-primary" id="registerBtn" aria-label="Register" title="Register">
-                    <i class="fas fa-user-l̥ōōplus"></i> Register
+                <button class="btn btn-primary" id="registerBtn" type="button" aria-label="Register">
+                    <i class="fas fa-user-plus" aria-hidden="true"></i> Register
                 </button>
-                <button class="btn btn-outline" id="logoutBtn" aria-label="Log out" title="Log out" hidden>
-                    <i class="fas fa-sign-out-alt"></i> Log Out
-                </button>
-                <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu" aria-controls="navMenu" aria-expanded="false">
-                    <i class="fas fa-bars"></i>
+                <button class="btn btn-outline" id="logoutBtn" type="button" aria-label="Log out" hidden>
+                    <i class="fas fa-sign-out-alt" aria-hidden="true"></i> Log Out
                 </button>
             </div>
         </div>
@@ -64,27 +94,12 @@
     <!-- Hero Section -->
     <section class="hero-section" id="home">
         <div class="hero-content">
+            <a href="#home" class="logo hero-brand" aria-label="AutoBazaar home">
+                <img class="logo-icon" src="../Assets/Images/Icon.png" alt="">
+                <span class="logo-text">Auto<span class="logo-highlight">Bazaar</span></span>
+            </a>
             <h1 class="hero-title">Find your next ride</h1>
             <p class="hero-subtitle">Browse pre-owned cars and bikes from sellers near you</p>
-            <div class="hero-search">
-                <form class="search-container" id="searchForm">
-                    <input type="search" placeholder="Search cars, bikes, brands..." class="search-input" id="vehicleSearch">
-                    <select class="search-select" id="locationFilter" aria-label="Filter by location">
-                        <option value="">All locations</option>
-                        <option value="mumbai">Mumbai</option>
-                        <option value="delhi">Delhi</option>
-                        <option value="bangalore">Bangalore</option>
-                    </select>
-                    <select class="search-select" id="categoryFilter" aria-label="Filter by vehicle type">
-                        <option value="all">All vehicles</option>
-                        <option value="car">Cars</option>
-                        <option value="bike">Bikes</option>
-                    </select>
-                   <button class="search-btn" type="submit">
-                        <i class="fas fa-search"></i> Search
-                    </button>
-                </form>
-            </div>
             <div class="hero-stats">
                 <div class="stat-item">
                     <h3>Cars</h3>

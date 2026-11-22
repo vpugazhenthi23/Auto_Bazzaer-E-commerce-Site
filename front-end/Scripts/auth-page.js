@@ -18,6 +18,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function switchAuthTab(tabName) {
     authCard.classList.toggle('register-mode', tabName === 'register');
+    const authTitle = document.getElementById('authPageTitle');
+    const authSubtitle = document.getElementById('authPageSubtitle');
+    authTitle.textContent = tabName === 'register' ? 'Create your account' : 'Welcome back';
+    if (authSubtitle) {
+        authSubtitle.textContent = tabName === 'register'
+            ? 'Join AutoBazaar and start buying or selling'
+            : 'Sign in to continue to your account';
+    }
     authTabs.forEach(tab => {
         tab.classList.toggle('active', tab.dataset.tab === tabName);
         tab.setAttribute('aria-selected', String(tab.dataset.tab === tabName));
