@@ -16,21 +16,32 @@
             <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation menu" aria-controls="navMenu" aria-expanded="false">
                 <i class="fas fa-bars" aria-hidden="true"></i>
             </button>
-            <form class="search-container nav-search" id="searchForm">
-                <input type="search" placeholder="Search cars, bikes, brands..." class="search-input" id="vehicleSearch">
-                <select class="search-select" id="locationFilter" aria-label="Filter by location">
-                    <option value="">All locations</option>
-                    <option value="mumbai">Mumbai</option>
-                    <option value="delhi">Delhi</option>
-                    <option value="bangalore">Bangalore</option>
-                </select>
-                <select class="search-select" id="categoryFilter" aria-label="Filter by vehicle type">
-                    <option value="all">All vehicles</option>
-                    <option value="car">Cars</option>
-                    <option value="bike">Bikes</option>
-                </select>
+            <form class="search-container nav-search" id="searchForm" role="search">
+                <div class="search-field search-field-main">
+                    <i class="fas fa-search search-field-icon" aria-hidden="true"></i>
+                    <input type="search" placeholder="Search cars, bikes, brands..." class="search-input" id="vehicleSearch" aria-label="Search vehicles" autocomplete="off">
+                </div>
+                <div class="search-field search-field-select">
+                    <i class="fas fa-location-dot search-field-icon" aria-hidden="true"></i>
+                    <select class="search-select" id="locationFilter" aria-label="Filter by location">
+                        <option value="">All locations</option>
+                        <option value="mumbai">Mumbai</option>
+                        <option value="delhi">Delhi</option>
+                        <option value="bangalore">Bangalore</option>
+                    </select>
+                    <i class="fas fa-chevron-down search-field-caret" aria-hidden="true"></i>
+                </div>
+                <div class="search-field search-field-select">
+                    <i class="fas fa-car-side search-field-icon" aria-hidden="true"></i>
+                    <select class="search-select" id="categoryFilter" aria-label="Filter by vehicle type">
+                        <option value="all">All vehicles</option>
+                        <option value="car">Cars</option>
+                        <option value="bike">Bikes</option>
+                    </select>
+                    <i class="fas fa-chevron-down search-field-caret" aria-hidden="true"></i>
+                </div>
                 <button class="search-btn" type="submit">
-                    <i class="fas fa-search" aria-hidden="true"></i> Search
+                    <i class="fas fa-search" aria-hidden="true"></i> <span>Search</span>
                 </button>
             </form>
         </div>
@@ -38,7 +49,10 @@
             <div class="sidebar-header">
                 <div class="sidebar-heading">
                     <span class="sidebar-kicker">WELCOME TO</span>
-                    <h2>AutoBazaar</h2>
+                    <a href="#home" class="logo sidebar-brand" aria-label="AutoBazaar home">
+                        <img class="logo-icon" src="../Assets/Images/Icon.png" alt="">
+                        <span class="logo-text">Auto<span class="logo-highlight">Bazaar</span></span>
+                    </a>
                     <p>Find the ride that fits you.</p>
                 </div>
                 <button class="sidebar-close" id="sidebarClose" type="button" aria-label="Close navigation menu">
@@ -94,10 +108,6 @@
     <!-- Hero Section -->
     <section class="hero-section" id="home">
         <div class="hero-content">
-            <a href="#home" class="logo hero-brand" aria-label="AutoBazaar home">
-                <img class="logo-icon" src="../Assets/Images/Icon.png" alt="">
-                <span class="logo-text">Auto<span class="logo-highlight">Bazaar</span></span>
-            </a>
             <h1 class="hero-title">Find your next ride</h1>
             <p class="hero-subtitle">Browse pre-owned cars and bikes from sellers near you</p>
             <div class="hero-stats">
@@ -257,7 +267,7 @@
                     </div>
                     <p>"Bought my dream bike through AutoBazaar. The verification process gave me complete peace of mind!"</p>
                     <div class="testimonial-author">
-                        <div style="width: 50px; height: 50px; border-radius: 50%; background: var(--primary); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">
+                        <div class="testimonial-avatar testimonial-avatar-primary">
                             RK
                         </div>
                         <div>
@@ -277,7 +287,7 @@
                     </div>
                     <p>"Sold my car in 2 days! AutoBazaar's network and support made the process effortless."</p>
                     <div class="testimonial-author">
-                        <div style="width: 50px; height: 50px; border-radius: 50%; background: var(--accent); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">
+                        <div class="testimonial-avatar testimonial-avatar-accent">
                             PS
                         </div>
                         <div>
@@ -297,7 +307,7 @@
                     </div>
                     <p>"Excellent service! The detailed inspection report helped me make an informed decision."</p>
                     <div class="testimonial-author">
-                        <div style="width: 50px; height: 50px; border-radius: 50%; background: var(--success); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">
+                        <div class="testimonial-avatar testimonial-avatar-success">
                             AP
                         </div>
                         <div>
@@ -420,7 +430,7 @@
         <div class="container">
             <div class="footer-content">
                 <div class="footer-section">
-                    <div class="logo" style="margin-bottom: 1rem;">
+                    <div class="logo footer-logo">
                         <img class="logo-icon" src="../Assets/Images/Icon.png" alt="">
                         <span class="logo-text">Auto<span class="logo-highlight">Bazaar</span></span>
                     </div>
@@ -522,7 +532,7 @@
                         <div class="form-group">
                             <input type="password" name="password" id="loginPassword" placeholder="Password" autocomplete="current-password" required>
                         </div>
-                        <button type="submit" class="btn btn-primary" style="width: 100%;">
+                        <button type="submit" class="btn btn-primary auth-submit">
                             <i class="fas fa-sign-in-alt"></i> Login
                         </button>
                     </form>
@@ -569,7 +579,7 @@
                                 <input type="password" name="confirmPassword" id="registerConfirmPassword" placeholder="Confirm Password" autocomplete="new-password" minlength="6" required>
                             </div>
                         </div>
-                        <button type="submit" class="btn btn-primary" style="width: 100%;">
+                        <button type="submit" class="btn btn-primary auth-submit">
                             <i class="fas fa-user-plus"></i> Create Account
                         </button>
                     </form>
@@ -580,20 +590,20 @@
 
     <!-- Sell Vehicle Modal -->
     <div class="modal" id="sellModal">
-        <div class="modal-content" style="max-width: 800px;">
+        <div class="modal-content sell-modal-content">
             <span class="close-modal">&times;</span>
             <div class="modal-body">
-                <h2 style="text-align: center; margin-bottom: 2rem; color: var(--secondary);">Sell Your Vehicle</h2>
+                <h2 class="sell-modal-title">Sell Your Vehicle</h2>
                 <form id="sellVehicleForm">
                     <div class="form-row">
                         <div class="form-group">
-                            <label style="display: block; margin-bottom: 8px; color: var(--secondary);">Vehicle Type</label>
-                            <div style="display: flex; gap: 2rem;">
-                                <label style="display: flex; align-items: center; gap: 8px;">
+                            <label class="sell-form-label">Vehicle Type</label>
+                            <div class="vehicle-type-options">
+                                <label class="vehicle-type-option">
                                     <input type="radio" name="vehicleType" value="car" checked>
                                     <i class="fas fa-car"></i> Car
                                 </label>
-                                <label style="display: flex; align-items: center; gap: 8px;">
+                                <label class="vehicle-type-option">
                                     <input type="radio" name="vehicleType" value="bike">
                                     <i class="fas fa-motorcycle"></i> Bike
                                 </label>
@@ -652,17 +662,17 @@
                     </div>
                     
                     <div class="form-group">
-                        <label style="display: block; margin-bottom: 8px; color: var(--secondary);">Upload Photos (Minimum 5)</label>
-                        <div style="border: 2px dashed var(--light-gray); border-radius: var(--radius-lg); padding: 2rem; text-align: center; cursor: pointer;" id="uploadZone">
-                            <i class="fas fa-cloud-upload-alt" style="font-size: 3rem; color: var(--primary); margin-bottom: 1rem;"></i>
+                        <label class="sell-form-label">Upload Photos (Minimum 5)</label>
+                        <div class="upload-zone" id="uploadZone">
+                            <i class="fas fa-cloud-upload-alt upload-zone-icon"></i>
                             <p>Click or drag to upload vehicle photos</p>
                             <small>Maximum 10 photos, 5MB each</small>
-                            <input type="file" multiple accept="image/*" style="display: none;" id="photoUpload">
+                            <input type="file" multiple accept="image/*" class="file-input-hidden" id="photoUpload">
                         </div>
-                        <div id="photoPreview" style="margin-top: 1rem;"></div>
+                        <div class="photo-preview" id="photoPreview"></div>
                     </div>
                     
-                    <button type="submit" class="btn btn-primary" style="width: 100%;">
+                    <button type="submit" class="btn btn-primary sell-submit">
                         <i class="fas fa-tag"></i> List Vehicle for Sale
                     </button>
                 </form>

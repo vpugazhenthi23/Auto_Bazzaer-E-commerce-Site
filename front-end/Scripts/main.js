@@ -350,17 +350,14 @@ function setupEventListeners() {
         uploadZone.addEventListener('click', () => photoUpload.click());
         uploadZone.addEventListener('dragover', (e) => {
             e.preventDefault();
-            uploadZone.style.borderColor = 'var(--primary)';
-            uploadZone.style.background = 'rgba(255, 106, 0, 0.06)';
+            uploadZone.classList.add('is-dragging');
         });
         uploadZone.addEventListener('dragleave', () => {
-            uploadZone.style.borderColor = 'var(--light-gray)';
-            uploadZone.style.background = 'white';
+            uploadZone.classList.remove('is-dragging');
         });
         uploadZone.addEventListener('drop', (e) => {
             e.preventDefault();
-            uploadZone.style.borderColor = 'var(--light-gray)';
-            uploadZone.style.background = 'white';
+            uploadZone.classList.remove('is-dragging');
             handleImageUpload(e.dataTransfer.files);
         });
         photoUpload.addEventListener('change', (e) => handleImageUpload(e.target.files));
