@@ -2361,11 +2361,41 @@ body {
     color: #755f4e;
     box-shadow: var(--shadow-sm);
     cursor: pointer;
-    transition: color 0.2s ease, transform 0.2s ease, background 0.2s ease;
+    transition: color 0.2s ease, background 0.2s ease;
 }
-.favorite-toggle:hover { transform: scale(1.08); color: var(--primary); }
+.favorite-toggle:hover { color: var(--primary); }
 .favorite-toggle.is-favorite { background: #fff1e3; color: var(--primary); }
 .favorite-toggle:focus-visible { outline: 3px solid rgba(255, 106, 0, 0.35); outline-offset: 2px; }
+.favorite-toggle .favorite-heart {
+    transition: transform 0.2s ease;
+}
+.favorite-toggle:hover .favorite-heart,
+.favorite-toggle:focus-visible .favorite-heart {
+    transform: scale(1.12);
+}
+.favorite-toggle .favorite-heart.is-animating {
+    animation: favorite-heart-pop 0.42s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.vehicle-card:hover .favorite-toggle:hover + .vehicle-image img,
+.vehicle-card:hover .favorite-toggle:focus + .vehicle-image img {
+    transform: none;
+}
+.vehicle-card:has(.favorite-toggle:hover),
+.vehicle-card:has(.favorite-toggle:focus) {
+    transform: none;
+    box-shadow: var(--shadow-sm);
+}
+.vehicle-card.no-entry-animation {
+    animation: none;
+}
+
+@keyframes favorite-heart-pop {
+    0% { transform: scale(1); }
+    35% { transform: scale(1.45) rotate(-12deg); }
+    65% { transform: scale(0.9) rotate(8deg); }
+    100% { transform: scale(1); }
+}
+
 .favorites-filter { white-space: nowrap; }
 .favorites-count {
     min-width: 20px;
@@ -2390,7 +2420,8 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .btn-primary, .search-btn, .vehicle-card::after, .favorite-toggle { transition: none; }
+    .btn-primary, .search-btn, .vehicle-card::after, .favorite-toggle, .favorite-toggle .favorite-heart { transition: none; }
+    .favorite-toggle .favorite-heart.is-animating { animation: none; }
 }
 
 /* ====== RESPONSIVE ====== */

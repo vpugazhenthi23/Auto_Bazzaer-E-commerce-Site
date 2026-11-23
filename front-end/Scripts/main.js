@@ -108,7 +108,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // ====== RENDER FUNCTIONS ======
-function renderVehicles(vehicles) {
+function renderVehicles(vehicles, shouldAnimateCards = true) {
     carouselContainer.innerHTML = '';
 
     document.getElementById('vehicleResultsCount').textContent =
@@ -125,8 +125,8 @@ function renderVehicles(vehicles) {
     vehicles.forEach(vehicle => {
         const vehicleCard = document.createElement('div');
         vehicleCard.className = vehicle.isPhotoPreview
-            ? 'vehicle-card vehicle-card-preview'
-            : 'vehicle-card';
+            ? `vehicle-card vehicle-card-preview${shouldAnimateCards ? '' : ' no-entry-animation'}`
+            : `vehicle-card${shouldAnimateCards ? '' : ' no-entry-animation'}`;
         vehicleCard.setAttribute('data-type', vehicle.type);
         const detailItems = [
             { icon: 'fa-calendar', text: vehicle.year },
@@ -145,7 +145,7 @@ function renderVehicles(vehicles) {
         vehicleCard.innerHTML = `
             <div class="vehicle-badge">${vehicle.type === 'car' ? (vehicle.isPhotoPreview ? 'Sample Car' : 'Car') : 'Bike'}</div>
             <button class="favorite-toggle${favoriteVehicleIds.includes(String(vehicle.id)) ? ' is-favorite' : ''}" type="button" data-id="${vehicle.id}" aria-label="${favoriteVehicleIds.includes(String(vehicle.id)) ? 'Remove' : 'Save'} ${vehicle.name} ${favoriteVehicleIds.includes(String(vehicle.id)) ? 'from' : 'to'} favorites" aria-pressed="${favoriteVehicleIds.includes(String(vehicle.id))}" title="${favoriteVehicleIds.includes(String(vehicle.id)) ? 'Remove from favorites' : 'Save to favorites'}">
-                <i class="fas fa-heart" aria-hidden="true"></i>
+                <i class="fas fa-heart favorite-heart" aria-hidden="true"></i>
             </button>
             <div class="vehicle-image">
                 <img src="${vehicle.image}" alt="${vehicle.name}">
@@ -193,7 +193,7 @@ function renderVehicles(vehicles) {
 
     document.querySelectorAll('.favorite-toggle').forEach(btn => {
         btn.addEventListener('click', function() {
-            toggleFavorite(this.getAttribute('data-id'));
+            toggleFavorite(this.getAttribute('data-id'), this);
         });
     });
 
@@ -438,7 +438,7 @@ function switchAuthTab(tabName) {
 }
 
 // ====== VEHICLE FUNCTIONS ======
-function applyVehicleFilters() {
+function applyVehicleFilters(shouldAnimateCards = true) {
     const searchTerm = document.getElementById('vehicleSearch').value.trim().toLowerCase();
     const location = document.getElementById('locationFilter').value.toLowerCase();
     const category = document.getElementById('categoryFilter').value;
@@ -455,7 +455,7 @@ function applyVehicleFilters() {
     vehiclesData = showingAll || hasActiveFilters
         ? matches
         : [...initialVehiclesData];
-    renderVehicles(vehiclesData);
+    renderVehicles(vehiclesData, shouldAnimateCards);
     const canToggleCatalogue = !hasActiveFilters && matches.length > 6;
     viewAllBtn.style.display = canToggleCatalogue ? '' : 'none';
     viewAllBtn.setAttribute('aria-expanded', String(showingAll));
@@ -485,7 +485,7 @@ function loadFavorites() {
     }
 }
 
-function toggleFavorite(id) {
+function toggleFavorite(id, button) {
     const vehicleId = String(id);
     const wasFavorite = favoriteVehicleIds.includes(vehicleId);
     const updatedFavorites = wasFavorite
@@ -501,8 +501,24 @@ function toggleFavorite(id) {
     }
 
     favoriteVehicleIds = updatedFavorites;
+    const isFavorite = !wasFavorite;
+    const vehicleName = button.closest('.vehicle-card').querySelector('.vehicle-title').textContent;
+    button.classList.toggle('is-favorite', isFavorite);
+    button.setAttribute('aria-pressed', String(isFavorite));
+    button.setAttribute('aria-label', `${isFavorite ? 'Remove' : 'Save'} ${vehicleName} ${isFavorite ? 'from' : 'to'} favorites`);
+    button.title = isFavorite ? 'Remove from favorites' : 'Save to favorites';
+
+    const heart = button.querySelector('.favorite-heart');
+    heart.classList.remove('is-animating');
+    void heart.offsetWidth;
+    heart.classList.add('is-animating');
+
     showToast(wasFavorite ? 'Vehicle removed from favorites.' : 'Vehicle saved to favorites.', 'success');
-    applyVehicleFilters();
+    if (favoritesOnly && wasFavorite) {
+        applyVehicleFilters(false);
+    } else {
+        updateFavoritesCount();
+    }
 }
 
 function updateFavoritesCount() {
